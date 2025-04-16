@@ -11,7 +11,7 @@
 #SBATCH -N 1               # Number of nodes
 
 module load anaconda
-module load cuda92/toolkit
+module load cuda
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 source ~/.bashrc
