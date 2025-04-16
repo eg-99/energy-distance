@@ -1,3 +1,4 @@
+import os
 import time
 from mteb import MTEB
 from sentence_transformers import SentenceTransformer
@@ -24,7 +25,7 @@ model_name = "distilbert-base-uncased_CosSim-fever-lr2e-05-epochs10-temperature2
 start_time = time.time()  # Record the start time
 
 # Load the model
-model = SentenceTransformer("/moto/home/ggn2104/beir/examples/retrieval/training/output/distilbert-base-uncased_CosSim-fever-lr2e-05-epochs10-temperature20_full_dev")
+model = SentenceTransformer(os.path.join(os.getcwd(), "beir/examples/retrieval/training/output/distilbert-base-uncased_CosSim-fever-lr2e-05-epochs10-temperature20_full_dev"))
 #model = SentenceTransformer(model_name)
 model = model.to(device)  # Ensure the model is loaded to the correct device
 
