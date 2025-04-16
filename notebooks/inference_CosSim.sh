@@ -9,6 +9,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # MODIFY THE FOLLOWING FOR DIFFERENT CONFIGURATIONS
 #SBATCH -N 1               # Number of nodes
+#SBATCH --gres:gpu:2
 
 module load anaconda
 module load cuda
