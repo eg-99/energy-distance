@@ -23,7 +23,7 @@ export PYTHONPATH=$CONDA_PREFIX/lib/python3.9/site-packages:$PYTHONPATH
 
 #export CUDA_VISIBLE_DEVICES=1
 
-srun python /moto/home/ggn2104/cos_sim/eval_dataset.py
+srun python ./energy-distance/notebooks/eval_dataset.py
 #srun python /moto/home/ggn2104/cos_sim/eval_dataset_subset_length.py 
 
 # End of script
