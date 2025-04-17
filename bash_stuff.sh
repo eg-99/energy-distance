@@ -7,7 +7,7 @@ cd /insomnia001/depts/edu/users/$USERNAME
 
 wget https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh
 
-bash Anaconda3-2024.10-1-Linux-x86_64.sh -b -p /vol/scratch/$USERNAME/anaconda3 
+bash Anaconda3-2024.10-1-Linux-x86_64.sh -b -p /insomnia001/depts/edu/users/$USERNAME/anaconda3 
 PATH="/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin:/insomnia001/depts/edu/users/$USERNAME/anaconda3/sbin:$PATH"
 CONDA_PYTHON_EXE=/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin/python
 
