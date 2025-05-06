@@ -23,8 +23,9 @@ print(torch.cuda.current_device())  # Prints the current device index
 # Define paths
 model_name = "Alibaba-NLP/gte-modernbert-base"
 #model_name = "snowflake-arctic-embed-m-v1.5_CosSim"
-model = SentenceTransformer(model_name)
-save_dir = os.path.join(pathlib.Path(__file__).parent.absolute(), "output", f"{model_name}-synthetictext2sql-lr1e-5-epochs10")
+model = SentenceTransformer(model_name, device=device)
+save_dir = os.path.join(pathlib.Path(__file__).parent.absolute(), "output", f"{model_name}-synthetictext2sql-lr1e-3-epochs1_cosine")
+print(save_dir)
 os.makedirs(save_dir, exist_ok=True)
 
 # Load dataset
@@ -41,8 +42,10 @@ queries = {q["_id"]: q["text"] for q in queries_ds}
 corpus = {c["_id"]: {"text": c["text"], "title": ""} for c in corpus_ds}
 
 dev_corpus_ids = set(item["corpus-id"] for item in validation_data)
+dev_query_ids = set(item["query-id"] for item in validation_data)
 dev_corpus = {c["_id"]: {"text": c["text"], "title": ""} for c in corpus_ds if c["_id"] in dev_corpus_ids}
-dev_queries = {q["_id"]: q["text"] for q in queries_ds if q["_id"] in dev_corpus_ids}
+# dev_queries = {q["_id"]: q["text"] for q in queries_ds if q["_id"] in dev_corpus_ids}
+dev_queries = {q["_id"]: q["text"] for q in queries_ds if q["_id"] in dev_query_ids}
 
 qrels_train = defaultdict(dict)
 for entry in new_train_data:
@@ -75,7 +78,7 @@ ir_evaluator = InformationRetrievalEvaluator(
     name="text2sql-dev", show_progress_bar=True
 )
 
-model.to(device)
+# model.to(device)
 
 # ** Custom Callback to Save Best Model ** WE DONT NEED THIS TO SAVE THE BEST MODEL JUST UNCOMMENT THE TRAINING ARGUMENTS THAT ARE COMMENTED OUT
 class BestModelCallback(TrainerCallback):
@@ -99,18 +102,19 @@ class BestModelCallback(TrainerCallback):
 training_args = SentenceTransformerTrainingArguments(
     output_dir=save_dir,
     num_train_epochs=1,
-    per_device_train_batch_size=16,
+    per_device_train_batch_size=8,
     # learning_rate=1e-5,
     learning_rate=1e-3,
     warmup_steps=int(len(train_dataset) * 10 / 16 * 0.1),
     logging_steps=1, 
     save_strategy="epoch",
-    #evaluation_strategy="epoch",
+    eval_strategy="epoch",
     # evaluation_strategy="no",
     save_total_limit=2,
     #load_best_model_at_end=True,
-    #metric_for_best_model="eval_hotpotqa-dev_energy_distance_ndcg@10",
+    metric_for_best_model="eval_text2sql-dev_energy_distance_ndcg@10",
     #greater_is_better=True,
+    max_steps=1
 )
 
 # ** Resume Trainer from Last Epoch ** set eval dataset to use ir_evaluator and uncomment evaluator argument
@@ -120,7 +124,7 @@ trainer = SentenceTransformerTrainer(
     train_dataset=train_dataset,
     eval_dataset=None,
     loss=losses.MultipleNegativesRankingLoss(model=model),
-    #evaluator=ir_evaluator,
+    evaluator=ir_evaluator,
     callbacks=[]
 )
 
