@@ -43,7 +43,6 @@ corpus = {c["_id"]: {"text": c["text"], "title": ""} for c in corpus_ds}
 dev_corpus_ids = set(item["corpus-id"] for item in validation_data)
 dev_query_ids = set(item["query-id"] for item in validation_data)
 dev_corpus = {c["_id"]: {"text": c["text"], "title": ""} for c in corpus_ds if c["_id"] in dev_corpus_ids}
-dev_queries = {q["_id"]: q["text"] for q in queries_ds if q["_id"] in dev_corpus_ids}
 dev_queries = {q["_id"]: q["text"] for q in queries_ds if q["_id"] in dev_query_ids}
 
 qrels_train = defaultdict(dict)
