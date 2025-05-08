@@ -7,6 +7,8 @@ USERNAME=$(whoami)
 
 cd /insomnia001/depts/edu/users/$USERNAME
 
+// Set up the Python environment as noted below for myenv39
+
 PATH="/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin:/insomnia001/depts/edu/users/$USERNAME/anaconda3/sbin:$PATH"
 
 CONDA_PYTHON_EXE=/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin/python
