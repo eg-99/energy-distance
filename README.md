@@ -1,5 +1,18 @@
 # Energy Distance Project Training and Inference Instructions
 
+## New COIR Additions
+srun --pty -t 0-04:00 --gres=gpu:2 -A edu /bin/bash
+USERNAME=$(whoami)
+cd /insomnia001/depts/edu/users/$USERNAME
+PATH="/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin:/insomnia001/depts/edu/users/$USERNAME/anaconda3/sbin:$PATH"
+CONDA_PYTHON_EXE=/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin/python
+
+// Modify paths and parameters in energy-distance/notebooks/train_sbert_coir_final.py
+sbatch energy-distance/notebooks/train_coir_final.sh
+// Modify paths and parameters in energy-distance/notebooks/eval_sbert_coir_final.py
+sbatch energy-distance/notebooks/eval_final.sh
+
+
 ## Setting up Python Environment and Installing Required Libraries
 1. conda create --name myenv39 python=3.9
 2. conda activate myenv39
