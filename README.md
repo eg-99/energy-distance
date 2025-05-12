@@ -1,26 +1,46 @@
-# Energy Distance Project Training and Inference Instructions
+# HPML Project: Energy Distance Project Training and Inference Instructions
+## Team Information
+- **Team Name**: IBM Project #8
+- **Members**:
+- Chandhru Karthick (ck3255)
+- Chhavi Dixit (cd3496)
+- Elie Gross (eg3346)
+## Problem Statment and Motivation
+Part of long term project to explore better optimal retrieval metrics
+* Traditionally Cosine Similarity used as distance metric for IR tasks
+Potential Issues:
+* Cosine requires a single vector (typically [CLS] to represent a seq) => Loss of information
+Approach:
+* Physics inspired energy-distance as an alternate metric
+* Includes statistics of different token with multiple vectors for each query
+* Treats query as a “cloud” ☁️ and the document as a “point” ⚫️
+Value:
+* Longer queries have more noise and are harder to represent with single embedding [CLS]
+* Ergo: Tends to work better than cosine similarity for longer queries.
+Ongoing experiments explore:
+* Different distance metrics within energy-distance (L1, Hamming_L1…)
+* Comparison with distance metrics like Jenson Shannon-Divergence
+* Impact on IR tasks with different benchmark datasets (CoIR)
 
-## New COIR Additions
-srun --pty -t 0-04:00 --gres=gpu:2 -A edu /bin/bash
 
-USERNAME=$(whoami)
-
-cd /insomnia001/depts/edu/users/$USERNAME
-
-// Set up the Python environment as noted below for myenv39
-
-PATH="/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin:/insomnia001/depts/edu/users/$USERNAME/anaconda3/sbin:$PATH"
-
-CONDA_PYTHON_EXE=/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin/python
+## 2. Model Description
+- Framework - PyTorch
+- gte-modernbert-base
 
 
-// Modify paths and parameters in energy-distance/notebooks/train_sbert_coir_final.py
+## 3. Final Results Summary
 
-sbatch energy-distance/notebooks/train_coir_final.sh
 
-// Modify paths and parameters in energy-distance/notebooks/eval_sbert_coir_final.py
+| Model                     | ndcg@10 |
+|---------------------------|---------|
+| Leaderboard               | 0.6469  |
+| Baseline benchmark        | 0.63429 |
+| Single step               | 0.65781 |
+| 10 Epochs, larger lr      | 0.45195 |
+| 10 Epochs, smaller lr     | 0.64807 |
 
-sbatch energy-distance/notebooks/eval_final.sh
+
+## Reproducibility Instructions
 
 
 ## Setting up Python Environment and Installing Required Libraries
@@ -43,44 +63,48 @@ sbatch energy-distance/notebooks/eval_final.sh
 6. sbatch inference_CosSim.sh (Make sure the batch script calls eval_dataset.py and a baseline model is being used. *i.e. model = SentenceTransformer("Snowflake/snowflake-arctic-embed-m-v1.5")*)
 7. Cross reference the inference results with what is on the leaderboard. https://huggingface.co/spaces/mteb/leaderboard
 
-## Model Training
-1. cd /path_to_beir/beir/examples/retrieval/training
-2. Before running training, make sure the model, model_name, and hyperparameters (LR, scale) are correct. 
-nano train_sbert_latest_2.py or nano train_sbert_ddp_2.py to change model, model_name, and LR. 
-nano sentence-transformers-3.4.1/sentence-transformers/losses/MultipleNegativesRankingLoss.py to change scale. 
-3. sbatch train.sh OR sbatch train_ddp.sh if using multiple GPUs
-4. Trained model will be saved in /path_to_beir/beir/examples/retrieval/training/output
+## Model Training - New COIR Additions
+
+// Connect to insomnia server with cuid user
+
+srun --pty -t 0-04:00 --gres=gpu:2 -A edu /bin/bash
+
+USERNAME=$(whoami)
+
+cd /insomnia001/depts/edu/users/$USERNAME
+
+// Set up the Python environment as noted below for myenv39
+
+PATH="/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin:/insomnia001/depts/edu/users/$USERNAME/anaconda3/sbin:$PATH"
+
+CONDA_PYTHON_EXE=/insomnia001/depts/edu/users/$USERNAME/anaconda3/bin/python
+
+
+// Modify paths and parameters in energy-distance/notebooks/train_sbert_coir_final.py
+
+// Before running training, make sure the model, model_name, and hyperparameters (LR, scale) are correct.
+
+sbatch energy-distance/notebooks/train_coir_final.sh
+
+
 
 ## Model Evaluation
-1. sbatch inference_ED.sh if evaluating an ED trained model (myenv39 conda environment must be setup)
-2. sbatch inference_CosSim.sh if evaluating a cosine similarity trained model (testenv conda environment must be setup)
-3. Make sure the proper python script in the batch file is being run (if evaluating entire dataset or subset based on query lengths)
 
-## RPI Cluster Setup
-1. ssh <username>@blp01.ccni.rpi.edu
-2. ssh nplfen01 (Access NPL front-end node x86)
-3. cd ~/barn
-4. Follow instructions to install Conda on x86 https://docs.cci.rpi.edu/software/Conda/ (Make sure conda is installed in barn directory)
-5. echo 'export PATH="$HOME/miniconda3x86/condabin:$PATH"' >> ~/.bashrc
-6. source ~/.bashrc 
-7. export http_proxy=http://proxy:8888
-export https_proxy=$http_proxy\
-source /gpfs/u/home/MSSV/MSSVntsn/barn/miniconda3x86/etc/profile.d/conda.sh\
-export TMPDIR=~/barn\
-export TRANSFORMERS_CACHE=/gpfs/u/home/MSSV/MSSVntsn/barn\
-export HF_HOME=/gpfs/u/home/MSSV/MSSVntsn/barn\
-(Step 7 needs to be done every time you log in to the node, replace MSSVntsn with your username)
+// Modify paths and parameters in energy-distance/notebooks/eval_sbert_coir_final.py
+
+sbatch energy-distance/notebooks/eval_final.sh
+
+
+## Insomnia Cluster Setup
+Follow instructions in `bash_stuff.sh`
 
 
 ## IMPORTANT FILES
-1. train.sh - Batch script to run model training on a single GPU.  
-2. train_ddp.sh - Batch script to run model training on multiple GPUs. Make sure number of GPUs requested are properly set.
-3. inference_ED.sh - Batch script to run inference on an ED trained model. Can run on either entire dataset or subset based on query lengths.
-4. inference_CosSim.sh Batch script to run inference on a CosSim trained model. Can run on either entire dataset or subset based on query lengths.
-5. train_sbert_latest_2.py - Python script to run model training on a single GPU. Uses ir_evaluator to evaluate on a dev set after each epoch of training and only saves the best model, make sure ir_evaluator is enabled.
-6. train_sbert_ddp_2.py - Python script to run model training on multiple GPUs using DDP. Currently does not use an ir_evaluator to evaluate on a dev set after each epoch of training.
-7. eval_dataset.py - Python script to run inference on entire BEIR dataset.
-8. eval_dataset_subset_length.py - Python script to run inference on subset of BEIR dataset based on query lengths.
+1. train_sbert_coir_final.py
+2. train_coir_final.sh
+3. eval_sbert_coir_final.py
+4. eval_final.sh
+
 
 ## IMPORTANT NOTES
 1. All files used for training should be present when you clone the gnatesan/beir repository in beir/examples/retrieval/training folder.
