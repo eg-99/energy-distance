@@ -17,7 +17,9 @@ conda init
 bash
 conda activate myenv39
 pip install --upgrade pip --index-url https://pypi.org/simple
-pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
+# Follow instructions in https://pytorch.org/get-started/locally/ - this depends on output of nvidia-smi
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+pip install transformers[torch]
 git clone git@github.com:gnatesan/sentence-transformers-3.4.1.git
 git clone git@github.com:gnatesan/mteb-1.34.14.git
 pip install -e /path_to_sentence-transformers/sentence-transformers-3.4.1
