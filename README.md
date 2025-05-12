@@ -5,7 +5,7 @@
 - Chandhru Karthick (ck3255)
 - Chhavi Dixit (cd3496)
 - Elie Gross (eg3346)
-## Problem Statment and Motivation
+## 1. Problem Statment and Motivation
 Part of long term project to explore better optimal retrieval metrics
 * Traditionally Cosine Similarity used as distance metric for IR tasks
 Potential Issues:
@@ -40,10 +40,12 @@ Ongoing experiments explore:
 | 10 Epochs, smaller lr     | 0.64807 |
 
 
-## Reproducibility Instructions
+## 4. Reproducibility Instructions
 
+### A. Insomnia Cluster Setup
+Follow instructions in `bash_stuff.sh`
 
-## Setting up Python Environment and Installing Required Libraries
+### Setting up Python Environment and Installing Required Libraries
 1. conda create --name myenv39 python=3.9
 2. conda activate myenv39
 3. pip install --upgrade pip --index-url https://pypi.org/simple
@@ -54,7 +56,7 @@ Ongoing experiments explore:
 8. pip install -e /path_to_mteb/mteb-1.34.14
 9. git clone https://github.com/gnatesan/beir.git
 
-## Sanity Check
+### B. Sanity Check
 1. conda create --name testenv python=3.9
 2. conda activate testenv
 3. pip install --upgrade pip --index-url https://pypi.org/simple
@@ -63,7 +65,7 @@ Ongoing experiments explore:
 6. sbatch inference_CosSim.sh (Make sure the batch script calls eval_dataset.py and a baseline model is being used. *i.e. model = SentenceTransformer("Snowflake/snowflake-arctic-embed-m-v1.5")*)
 7. Cross reference the inference results with what is on the leaderboard. https://huggingface.co/spaces/mteb/leaderboard
 
-## Model Training - New COIR Additions
+### C. Model Training - New COIR Additions
 
 // Connect to insomnia server with cuid user
 
@@ -88,15 +90,14 @@ sbatch energy-distance/notebooks/train_coir_final.sh
 
 
 
-## Model Evaluation
+### D. Model Evaluation
 
 // Modify paths and parameters in energy-distance/notebooks/eval_sbert_coir_final.py
 
 sbatch energy-distance/notebooks/eval_final.sh
 
 
-## Insomnia Cluster Setup
-Follow instructions in `bash_stuff.sh`
+
 
 
 ## IMPORTANT FILES
