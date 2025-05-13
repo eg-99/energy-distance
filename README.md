@@ -24,8 +24,30 @@ Ongoing experiments explore:
 
 
 ## 2. Model Description
-- Framework - PyTorch
-- gte-modernbert-base
+The model used in this work is based on gte-modernbert-base, a variant of BERT fine-tuned for general-purpose text embedding tasks. It follows the SentenceTransformer paradigm, combining a transformer encoder with mean pooling and L2 normalization to produce fixed-size sentence embeddings.
+
+Framework: PyTorch, with HuggingFace Transformers and Sentence-Transformers
+Base Architecture: bert-base-uncased
+
+12 transformer layers
+
+12 attention heads
+
+Hidden size: 768
+
+Intermediate (FFN) size: 3072
+
+Activation: GELU
+
+Custom Layers and Modifications:
+
+Mean pooling layer over token embeddings (excluding special tokens)
+
+L2 normalization applied to pooled embeddings
+
+Custom similarity function: An energy distance (ED-L1) metric is used in place of cosine similarity to better model intra-query distributional structures.
+
+This architecture is trained using Multiple Negatives Ranking Loss, scaled by a fixed factor (20.0), to enhance separation in the embedding space for information retrieval tasks.
 
 
 ## 3. Final Results Summary
@@ -106,7 +128,3 @@ sbatch energy-distance/notebooks/eval_final.sh
 3. eval_sbert_coir_final.py
 4. eval_final.sh
 
-
-## IMPORTANT NOTES
-1. All files used for training should be present when you clone the gnatesan/beir repository in beir/examples/retrieval/training folder.
-2. If working on the RPI cluster NPL node make sure that all installations occur in the ~/barn directory due to larger memory storage. 
