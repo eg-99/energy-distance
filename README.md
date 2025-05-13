@@ -26,26 +26,26 @@ Ongoing experiments explore:
 ## 2. Model Description
 The model used in this work is based on gte-modernbert-base, a variant of BERT fine-tuned for general-purpose text embedding tasks. It follows the SentenceTransformer paradigm, combining a transformer encoder with mean pooling and L2 normalization to produce fixed-size sentence embeddings.
 
-Framework: PyTorch, with HuggingFace Transformers and Sentence-Transformers
-Base Architecture: bert-base-uncased
+* Framework: PyTorch, with HuggingFace Transformers and Sentence-Transformers
+* Base Architecture: bert-base-uncased
 
-12 transformer layers
+  * 12 transformer layers
 
-12 attention heads
+  * 12 attention heads
 
-Hidden size: 768
+  * Hidden size: 768
 
-Intermediate (FFN) size: 3072
+  * Intermediate (FFN) size: 3072
 
-Activation: GELU
+  * Activation: GELU
 
-Custom Layers and Modifications:
+* Custom Layers and Modifications:
 
-Mean pooling layer over token embeddings (excluding special tokens)
+  * Mean pooling layer over token embeddings (excluding special tokens)
 
-L2 normalization applied to pooled embeddings
+  * L2 normalization applied to pooled embeddings
 
-Custom similarity function: An energy distance (ED-L1) metric is used in place of cosine similarity to better model intra-query distributional structures.
+* Similarity function: An energy distance (ED-L1) metric is used in place of cosine similarity to better model intra-query distributional structures.
 
 This architecture is trained using Multiple Negatives Ranking Loss, scaled by a fixed factor (20.0), to enhance separation in the embedding space for information retrieval tasks.
 
