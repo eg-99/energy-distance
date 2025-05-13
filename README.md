@@ -24,7 +24,9 @@ Ongoing experiments explore:
 
 
 ## 2. Model Description
-The model used in this work is based on gte-modernbert-base, a variant of BERT fine-tuned for general-purpose text embedding tasks. It follows the SentenceTransformer paradigm, combining a transformer encoder with mean pooling and L2 normalization to produce fixed-size sentence embeddings.
+Generally, for the Energy Distance project, the base model used is based on DistilBERT, a lighter and faster variant of BERT, pre-trained on the same corpus with knowledge distillation. The architecture follows the SentenceTransformer paradigm, combining a transformer encoder with pooling and normalization layers to generate fixed-size sentence embeddings.
+
+For the CoIR Text2SQL benchmark, the model employed is based on Alibaba-NLP’s `gte-modernbert-base`, a BERT-based encoder optimized for general-purpose text embeddings across multiple languages and retrieval tasks. It follows the SentenceTransformer architecture, consisting of a BERT encoder followed by mean pooling and L2 normalization to generate fixed-length sentence embeddings.
 
 * Framework: PyTorch, with HuggingFace Transformers and Sentence-Transformers
 * Base Architecture: bert-base-uncased
@@ -41,9 +43,9 @@ The model used in this work is based on gte-modernbert-base, a variant of BERT f
 
 * Custom Layers and Modifications:
 
-  * Mean pooling layer over token embeddings (excluding special tokens)
+  * Mean pooling over token embeddings
 
-  * L2 normalization applied to pooled embeddings
+  * L2 normalization on the pooled sentence vector
 
 * Similarity function: An energy distance (ED-L1) metric is used in place of cosine similarity to better model intra-query distributional structures.
 
