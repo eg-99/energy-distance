@@ -130,3 +130,7 @@ sbatch energy-distance/notebooks/eval_final.sh
 3. eval_sbert_coir_final.py
 4. eval_final.sh
 
+
+## NOTES
+scale parameter can be modified in
+`sentence-transformers-3.4.1/blob/master/sentence_transformers/losses/MultipleNegativesRankingLoss.py`
